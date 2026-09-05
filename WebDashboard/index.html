@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSF - Sign In</title>
+  <meta name="description" content="NSF National Steel Fabrication - Enterprise Portal Sign In">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-wrapper" id="loginScreen">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="nsf.png" alt="NSF National Steel Fabrication" class="login-logo-img">
+        <h2>NSF Request Portal</h2>
+        <p class="login-subtitle">National Steel Fabrication — Sign In</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsernameInput" class="form-label">Username</label>
+          <input type="text" id="loginUsernameInput" class="form-control" value="Martin@gmail.com" placeholder="e.g. Martin@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-control" value="@Martin462005" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary full-width btn-lg" id="btnLogin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Sign In
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <span class="status-dot online"></span> Endpoint: <code>https://localhost:44372/token</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const STATIC_SERVER_HTTPS = 'https://localhost:44372';
+    const STATIC_SERVER_HTTP = 'http://localhost:44372';
+
+    const EMAIL_TO_NAME = {
+      "martin@gmail.com": "Martin Wassim"
+    };
+
+    // Theme
+    const savedTheme = localStorage.getItem('nsf_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // If already logged in, go to dashboard
+    if (sessionStorage.getItem('nsf_access_token')) {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsernameInput').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!username || !password) { showToast('Please enter username and password', 'error'); return; }
+
+      showToast('Authenticating...', 'info');
+
+      const bodyData = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&grant_type=password`;
+      let serverResponded = false;
+
+      for (const serverBase of [STATIC_SERVER_HTTPS, STATIC_SERVER_HTTP]) {
+        try {
+          const res = await fetch(`${serverBase}/token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            body: bodyData
+          });
+
+          serverResponded = true;
+
+          if (res.ok) {
+            const data = await res.json();
+            const displayName = EMAIL_TO_NAME[username.toLowerCase()] || data.userName || username;
+            sessionStorage.setItem('nsf_access_token', data.access_token);
+            sessionStorage.setItem('nsf_username', displayName);
+            sessionStorage.setItem('nsf_server_base', serverBase);
+            showToast('Login successful! Redirecting...', 'success');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 600);
+            return;
+          } else {
+            const errJson = await res.json().catch(() => null);
+            const errMsg = (errJson && (errJson.error_description || errJson.error)) || 'The username or password is incorrect.';
+            showToast(`Login Failed: ${errMsg}`, 'error');
+            return;
+          }
+        } catch (err) {
+          console.warn(`Fetch failed on ${serverBase}:`, err);
+        }
+      }
+
+      if (!serverResponded) {
+        showToast('Connection Failed: Cannot reach the API server. Make sure IIS Express is running and SSL certificate is accepted.', 'error');
+      }
+    });
+
+    function showToast(message, type) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = message;
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; toast.style.transition = 'all 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+  </script>
+</body>
+</html>

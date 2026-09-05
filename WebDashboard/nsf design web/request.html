@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSF - New Request</title>
+  <meta name="description" content="NSF National Steel Fabrication - Create New Request">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container" id="appMain">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-branding">
+        <a href="dashboard.html" class="back-btn" title="Back to Dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </a>
+        <img src="nsf.png" alt="NSF" class="header-logo-img">
+        <div class="header-titles">
+          <h1>New Request</h1>
+          <span class="subtitle">NSF Ticket Management System</span>
+        </div>
+      </div>
+
+      <div class="user-profile-badge">
+        <div class="user-avatar" id="userAvatar">MW</div>
+        <div class="user-info">
+          <span class="user-name" id="loggedInUserName">User</span>
+          <span class="user-role" id="loggedInUserManager">Token: Active</span>
+        </div>
+        <button type="button" class="btn-logout" id="btnLogout" title="Sign Out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <div class="view-toggle-group">
+          <button type="button" class="btn-toggle active" id="tabNewRequestBtn">New Request</button>
+          <button type="button" class="btn-toggle" id="tabAllTicketsBtn">Saved Tickets (<span id="savedTicketsCount">0</span>)</button>
+        </div>
+
+        <button type="button" class="btn-icon" id="themeToggleBtn" title="Toggle Theme">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="btnNew">NEW</button>
+        <button type="button" class="btn btn-primary" id="btnSave">SAVE</button>
+      </div>
+    </header>
+
+    <!-- VIEW 1: NEW REQUEST FORM -->
+    <main class="main-content" id="viewNewRequest">
+      <form id="requestForm" onsubmit="event.preventDefault();">
+
+        <!-- SECTION 1: GENERAL INFORMATION -->
+        <section class="card form-section">
+          <div class="grid grid-3">
+            <div class="form-group">
+              <label for="reqType" class="form-label">Req Type <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select id="reqType" class="form-control" required>
+                  <option value="" disabled selected>Select Req Type...</option>
+                  <option value="IT Request">IT Request</option>
+                  <option value="Mobile Line Request">Mobile Line Request</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="site" class="form-label">Site <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select id="site" class="form-control" required>
+                  <option value="" disabled selected>Select Site...</option>
+                  <option value="OCT">OCT</option>
+                  <option value="SUZ">SUZ</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reqNo" class="form-label">Req No</label>
+              <div class="input-badge-wrapper">
+                <input type="text" id="reqNo" class="form-control readonly-input" value="REQ-0008" readonly>
+                <button type="button" class="btn-copy" id="copyReqNo" title="Copy Request Number">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: REQUESTER DETAIL -->
+        <section class="card form-section">
+          <div class="section-title-sm">Requester Detail</div>
+          <div class="grid grid-3 align-end">
+            <div class="form-group">
+              <div class="radio-segment-group">
+                <label class="radio-card">
+                  <input type="radio" name="requesterTarget" value="For Me" checked id="radioForMe">
+                  <span class="radio-card-body"><span class="radio-circle"></span> For Me</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="requesterTarget" value="On behalf of:" id="radioOnBehalf">
+                  <span class="radio-card-body"><span class="radio-circle"></span> On behalf of:</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="userNameInput" class="form-label">User_Name</label>
+              <input type="text" id="userNameInput" class="form-control" placeholder="Enter User Name" readonly>
+              <div class="select-wrapper hidden" id="userNameSelectWrapper">
+                <select id="userNameSelect" class="form-control">
+                  <option value="Martin Wassim">Martin Wassim</option>
+                  <option value="Medhat Magdy">Medhat Magdy</option>
+                  <option value="Hassan Ali">Hassan Ali</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </div>
+            <div class="form-group manager-group">
+              <div class="manager-input-container">
+                <label for="managerInput" class="form-label">Manager</label>
+                <input type="text" id="managerInput" class="form-control" placeholder="Manager Name" readonly>
+              </div>
+              <button type="button" class="btn btn-outline" id="btnCreateRequest">CREATE</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: REQUEST DETAIL (LOCKED) -->
+        <section class="card form-section highlight-card disabled-section" id="requestDetailSection">
+          <div class="section-header-bar">
+            <div class="section-title-sm">Request Detail</div>
+            <div class="lock-indicator" id="lockStatusBadge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Click CREATE above to unlock</span>
+            </div>
+          </div>
+          <div class="grid grid-request-details align-end">
+            <div class="form-group">
+              <label for="reqDetailItem" class="form-label">Req:</label>
+              <div class="select-wrapper">
+                <select id="reqDetailItem" class="form-control" disabled>
+                  <option value="" disabled selected>Select Category...</option>
+                  <option value="Hardware">Hardware</option>
+                  <option value="Service">Service</option>
+                  <option value="Software">Software</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reqDetailSpec" class="form-label">Details</label>
+              <div class="select-wrapper">
+                <select id="reqDetailSpec" class="form-control" disabled>
+                  <option value="" disabled selected>Select Item Detail...</option>
+                </select>
+                <span class="select-arrow"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Private</label>
+              <div class="toggle-container">
+                <label class="switch"><input type="checkbox" id="switchPrivate" disabled><span class="slider round"></span></label>
+                <span class="toggle-label-text" id="privateLabel">No</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reqOther" class="form-label">Other</label>
+              <input type="text" id="reqOther" class="form-control" placeholder="Other notes" disabled>
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-accent full-width" id="btnAddDetail" disabled>ADD</button>
+            </div>
+          </div>
+          <div class="form-group remarks-container">
+            <label for="reqRemarks" class="form-label">Remarks <span class="char-count" id="charCount">0 / 500 characters</span></label>
+            <textarea id="reqRemarks" class="form-control remarks-textarea" rows="3" maxlength="500" placeholder="Enter remarks..." disabled></textarea>
+          </div>
+        </section>
+
+        <!-- SECTION 4: STAGING TABLE -->
+        <section class="card form-section table-section">
+          <div class="table-header-bar">
+            <div class="table-title"><h3>Request Details Grid</h3></div>
+            <div class="table-meta"><span class="badge badge-subtle" id="itemsCountBadge">0 Items Added</span></div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="requestsTable">
+              <thead>
+                <tr><th>Req</th><th>Details</th><th>Private</th><th>Other</th><th>Remarks</th><th>Status</th><th class="text-right">Action</th></tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState">
+              <p class="empty-title">No request items added yet</p>
+              <p class="empty-subtitle">Create request above to unlock item builder, then click "ADD".</p>
+            </div>
+          </div>
+        </section>
+
+      </form>
+    </main>
+
+    <!-- VIEW 2: ALL TICKETS -->
+    <main class="main-content hidden" id="viewAllTickets">
+      <section class="card form-section">
+        <div class="table-header-bar">
+          <div class="table-title"><h3>Saved SQL Tickets</h3></div>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshTickets">Refresh Data</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="allTicketsTable">
+            <thead>
+              <tr><th>Req No</th><th>Req Type</th><th>Site</th><th>Requester</th><th>User_Name</th><th>Manager</th><th>Created Date</th><th>Total Items</th><th class="text-right">Actions</th></tr>
+            </thead>
+            <tbody id="allTicketsTableBody"></tbody>
+          </table>
+          <div class="empty-state hidden" id="allTicketsEmptyState">
+            <p class="empty-title">No tickets found in SQL Server database</p>
+            <p class="empty-subtitle">Create and save a ticket from the New Request form.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p>&copy; 2026 NSF — National Steel Fabrication. Request Portal.</p>
+      <div class="footer-links"><a href="#"><span class="status-dot online"></span> API Connected</a></div>
+    </footer>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
